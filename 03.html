@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:v-on="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link type="text/css" rel="stylesheet" href="reset.css"/>
+    <style type="text/css">
+        #cartTable{margin:30px auto; border-collapse: collapse;}
+        td,th{padding:5px 10px;}
+        .txtCnt{width:30px; margin:0px 5px;}
+        button{padding:5px;}
+        .total{font-size:18px; color:darkred; font-weight:800;}
+    </style>
+    <script src="vue.js"></script>
+</head>
+
+<body>
+<div id="cart">
+    <table border="1" cellspacing="0" id="cartTable" >
+        <thead>
+        <tr>
+            <th><input type="checkbox" name="" :checked="isAll" @click="checkAll()">全选</th>
+            <th>商品序号</th>
+            <th>商品编号</th>
+            <th>商品名称</th>
+            <th>商品数量</th>
+            <th>商品单价</th>
+            <th>移出</th>
+        </tr>
+        </thead>
+        <template v-if="goods.length">
+        <tbody>
+        <tr v-for = "(good,index) in goods">
+            <td><input type="checkbox" v-model="isCheck" :value="good.name" @change="test()"></td>
+            <td>{{index+1}}</td>
+            <td>{{good.index}}</td>
+            <td>{{good.name}}</td>
+            <td><button @click="minus(index)" :disabled = "good.number===1" >-</button>{{good.number}}<button @click="add(index)">+</button></td>
+            <td>{{good.price}}</td>
+            <td><button @click="del(index)">删除</button></td>
+        </tr>
+        </tbody>
+        <tfoot>
+        <tr>
+            <td colspan="7" >总价为：<span class="total">{{total}}</span>元</td>
+        </tr>
+        </tfoot>
+        </template>
+        <template v-else>
+            <tr>
+                <td colspan="7">此购物车中无商品</td>
+            </tr>
+        </template>
+    </table>
+</div>
+
+<script>
+    new Vue({
+        el:'#cart',
+        data:{
+            goods:[
+                {index:"0001",name:"iPhoneX",number:1,price:6188,isCheck: true},
+                {index:"0002",name:"华为p30",number:2,price:5934,isCheck: true},
+                {index:"0003",name:"小米RedmiBook",number:1,price:4299,isCheck: true},
+                {index:"0004",name:"华为畅享9e",number:3,price:799,isCheck: true},
+            ],
+            isAll:false,
+            total:0,
+            isCheck:[],
+        },
+        methods: {
+            minus: function (index) {
+                this.goods[index].number--;
+                this.calTotal();
+            },
+            add: function (index) {
+                this.goods[index].number++;
+                this.calTotal();
+            },
+            del: function (index) {
+                if (confirm("您确定要删除吗？")) {
+                    this.goods.splice(index, 1);
+                    this.calTotal();
+                }
+            },
+            checkAll:function(){
+                if(this.isAll){
+                    this.isAll = !this.isAll;
+                    this.isCheck = [];
+                }else{
+                    this.isAll = true;
+                    this.isCheck = [];
+                    for(var i = 0;i<this.goods.length;i++){
+                        this.isCheck.push(this.goods[i].name);
+                    }
+                }
+                this.calTotal();
+            },
+            calTotal:function(){
+                this.total = 0;
+                for(var i = 0;i<this.isCheck.length;i++){
+                    var name = this.isCheck[i];
+                    for(var j = 0;j<this.goods.length;j++){
+                        if(this.goods[j].name == name){
+                            this.total += this.goods[j].price * this.goods[j].number;
+                        }
+                    }
+                }
+            },
+            test:function(){
+                if(this.isCheck.length != this.goods.length){
+                    this.isAll = false;
+                }else{
+                    this.isAll = true;
+                }
+                this.calTotal();
+            }
+        }
+    });
+</script>
+</body>
+</html>

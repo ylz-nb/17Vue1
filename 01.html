@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:v-bind="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style type="text/css">
+        *{margin:0px; padding:0px;}
+        body{font-size:14px;}
+        #app{width:1000px; margin:10px auto;}
+        #bigImg{float:left; margin-right:10px;}
+        .item{
+            width:340px;
+            line-height:30px;
+            box-sizing: border-box;
+            background:#f7f7f7;
+            border:1px solid #f7f7f7;
+            margin:10px 0px;
+            float:left;
+        }
+        .item img{vertical-align:middle; margin-right:10px;}
+        .select{ border:1px solid darkred;}
+    </style>
+    <script src="vue.js"></script>
+</head>
+<body>
+<div id="app">
+        <img width="300px" height="300px"  :src="imgBigUrl" id="bigImg">
+    <div class="item">
+    <p>颜色选择</p>
+    <ul>
+    <li v-for="(item) in colors" @click="doClick(item)" style="list-style: none">
+        <div><img :src="item.imgUrl"  :alt="item.name"><span>{{item.name}}</span></div>
+    </li>
+    </ul>
+    </div>
+</div>
+
+<script>
+    new Vue({
+        el:'#app',
+        data:{
+            colors:[
+                {name:"红色", imgUrl:'images/1.jpg'},
+                {name:"黄色", imgUrl:'images/2.jpg'},
+                {name:"蓝色", imgUrl:'images/3.jpg'},
+                {name:"绿色", imgUrl:'images/4.jpg'},
+            ],
+            imgBigUrl:'images/1.jpg'
+        },
+        methods:{
+            doClick(item) {
+                this.imgBigUrl=item.imgUrl
+            }
+        }
+    })
+</script>
+
+</body>
+</html>
